@@ -1,7 +1,7 @@
 const mongoose=require('mongoose') //iske lie npm i mongoose karna hhh
 
-
-mongoose.connect('mongodb://127.0.0.1:27017/gdrive',{
+cons uri = 'mongodb+srv://akashsahu:akashsahu@node-tuts-cluster.rzcder3.mongodb.net/?retryWrites=true&w=majority&appName=node-tuts-cluster'
+mongoose.connect(uri,{
     ///userNewUrlParser: true,
     //userCreateIndex: true
 })
