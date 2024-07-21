@@ -25,7 +25,6 @@ const auth = async(req,res,next) =>{
 
 
 
-        console.log('token ye rha '+token)
         // Verify and decode the token
         const decoded = jwt.verify(token, 'ekprojectnahibanrha');
         //const decoded = jwt.verify(token,'ekprojectnahibanrha')
@@ -46,14 +45,7 @@ const auth = async(req,res,next) =>{
 
        
 
-    // Check if the folder belongs to the user
-    // const folder = await Folder.findOne({ _id: folderId, owner: user._id });
-
-    // if (!folder) {
-    //   throw new Error();
-    // }
-
-    // req.folder = folder; // Store the folder in req.folder
+  
 
         
 
