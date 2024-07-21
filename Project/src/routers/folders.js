@@ -17,7 +17,7 @@ const { v4: uuidv4 } = require('uuid');
 router.post('/folders', auth ,  async (req, res) => {
   const { name, parentFolder} = req.body;
 
-console.log('sjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj')
+
   try {
 
     const publicLinkToken = uuidv4();
@@ -53,7 +53,7 @@ console.log('sjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj')
   router.get('/folders/:id', auth , async (req, res) => {
     try {
       const parentFolderId = req.params.id; // Get the parent folder ID from the query parameters
-      console.log('yaha tak toh thik hh folder route memmm '+ parentFolderId)
+      
       const userId = req.user._id;
 
       let folders;
@@ -65,7 +65,7 @@ console.log('sjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj')
         // If parent folder ID is not provided, find folders with null parent folder ID
         folders = await Folder.find({ parentFolder: null , owner: userId , isDeleted : false  });
       }
-      //console.log(folders)
+  
       res.status(200).json({ folders });
     } catch (error) {
       console.error('Error retrieving folders:', error);
@@ -74,13 +74,13 @@ console.log('sjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj')
   });
 router.delete('/folders/:folderId', auth, async (req, res) => {
   try {
-    console.log('atleast')
+  
     const folderId = req.params.folderId;
     const userId = req.user._id;
 
     // Find the folder by ID and owner
     const folder = await Folder.findOne({_id: folderId, owner: userId });
-    console.log(folder)
+ 
     if (!folder) {
       // Folder not found or user is not the owner
       return res.status(404).json({ error: 'Folder not found' });
@@ -101,7 +101,7 @@ router.delete('/folders/:folderId', auth, async (req, res) => {
     // Delete the associated files
     await File.deleteMany({ folder: folderId });
 
-      console.log('yaha tak ok')
+
     // Delete the folder
     await Folder.findByIdAndDelete(folderId);
 
@@ -201,7 +201,7 @@ async function addFolderToArchive(archive, folder, token, folderPath) {
   const subfolders = foldersResponse.data.folders;
 
 
-    // const subfolders = await Folder.find({ parentFolder: folder._id, isDeleted: false });
+   
 
 
 // Now subfoldersArray contains all the subfolders as an array
@@ -209,7 +209,7 @@ console.log(subfolders);
 
 
   for (const subfolder of subfolders) {
-    console.log('andar '+ subfolder)
+    
     const subfolderPath = folderPath + '/' + subfolder.name + '/';
     archive.append(null, { name: subfolderPath });
   }
@@ -303,7 +303,7 @@ async function addPublicFolderToArchive(archive, folder, folderPath) {
   for (const file of files) {
     if (file) {
       const filePath = path.join('../Project/uploads', file.uploadname);    
-      console.log(filePath)  
+     
       const archivedFilePath = folderPath + '/' + file.filename; // Include subfolder path in archived file name
       archive.append(fs.createReadStream(filePath), { name: archivedFilePath });
     }
@@ -316,12 +316,12 @@ async function addPublicFolderToArchive(archive, folder, folderPath) {
   }
 
   const subfolders = foldersResponse.data.folders;
-  console.log(subfolders)
+
 
 
   for (const subfolder of subfolders) {
     const subfolderPath = folderPath + '/' + subfolder.name + '/';
-    console.log('jain' + subfolderPath)
+   
     archive.append(null, { name: subfolderPath });
     // await addPublicFolderToArchive(archive, subfolder, folderPath + '/' + subfolder.name);
   }
@@ -336,7 +336,7 @@ async function addPublicFolderToArchive(archive, folder, folderPath) {
 router.get('/publicfolders/:id', async (req, res) => {
   try {
     const parentFolderId = req.params.id; // Get the parent folder ID from the query parameters
-    console.log('yaha tak toh thik hh folder route public waala '+ parentFolderId)
+
 
     let folders;
 
@@ -353,7 +353,7 @@ router.get('/publicfolders/:id', async (req, res) => {
 router.get('/publicfiles/:id', async (req, res) => {
   try {
     const parentFolderId = req.params.id; // Get the parent folder ID from the query parameters
-    console.log('yaha tak toh thik hh file route public waala '+ parentFolderId)
+ 
 
     let files;
 
@@ -374,18 +374,17 @@ router.post('/folder/unshare', auth, async (req, res) => {
     console.log('hare ram 2')
     const folderId = req.body.itemId;
     const usermail = req.body.email;
-    console.log(folderId)
-    console.log(usermail)
+    
 
     const user = await User.findOne({email : usermail})
 
     // Find the folder by ID and owner
     const folder = await Folder.findOne({ _id: folderId, owner: req.user._id });
-    console.log('hare ram 3')
+    
     if (!folder) {
       return res.status(404).json({ error: 'Folder not found or user is not the owner' });
     }
-    console.log('hare krishna')
+
     // Remove the user ID from the "sharedWith" array
     folder.sharedUsers = folder.sharedUsers.filter(sharedUserId => sharedUserId.toString() !== user._id.toString());
 
@@ -399,54 +398,8 @@ router.post('/folder/unshare', auth, async (req, res) => {
   }
 }); 
 
-// router.get('/folder/sharedUsers/:folderId' , auth , async (req,res)=>{
-
-//   try{
-
-//     const folderId = req.params.folderId;
-//   const userId  = req.user._id;
-
-//   const folder = await Folder.findOne({ _id: folderId, owner: userId })
-  
-//   //console.log(folder)
-  
-//   const sharedUserEmails = folder.sharedUsers;
-//   // const users = folder.populate('sharedUsers')
-  
-//   const sharedUsers = await Promise.all(
-//     sharedUserEmails.map(async (email) => {
-
-//       const user = await User.findOne({ email });
-
-//       // Return an object with the user information you need
-//       return {
 
 
-//         email,
-//         name: user ? user.name : 'User Not Found' // Add any other user information you need
-//       };
-//     })
-//   );
-//     console.log(sharedUsers)
-//   res.render('sharedusers',{ sharedUsers });
-
-    
-//   if(!folder){
-//     res.status(404).json({error: 'Folder not found'})
-//   }
-  
-//   console.log(sharedUsers)
-
-
-
-//   } 
-//   catch(error){
-//     console.error('Error fetching shared users:', error);
-//     res.status(500).json({ error: 'An error occurred' });
-
-//   }
-
-// });
 
 
 
@@ -504,7 +457,7 @@ router.get('/getfolders/recycleBin' , auth , async(req,res)=>{
 
     const folders = await Folder.find({owner : req.user._id , isDeleted: true});
     
-    console.log(folders)
+   
 
     res.status(200).json({folders});
 
@@ -522,7 +475,7 @@ router.post('/folders/restore/:folderId' , auth , async (req,res)=>{
 
   try{
     const folderId = req.params.folderId;
-    console.log(folderId)
+
     const folder = await Folder.findOne({owner : req.user._id , _id : folderId})
 
     folder.isDeleted = false;
