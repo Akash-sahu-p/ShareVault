@@ -24,10 +24,7 @@ require('./db/mongoose.js')
 
 const port =process.env.PORT || 3000
  
-// mongoose.connect('mongodb://localhost:27017/gdrive', {
-//   useNewUrlParser: true, 
-//   useUnifiedTopology: true,
-// });    
+    
 const db = mongoose.connection;  
 
 app.use(express.json())
@@ -40,7 +37,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-console.log(__dirname)
 app.set('view engine', 'ejs');
 app.set('views', viewsPath);
 
@@ -63,17 +59,6 @@ app.get('/login', (req, res) => {
   app.get('/', (req, res) => {
     res.render('index');
   });
-  // app.get('/dashboard' ,auth, (req, res) => {
-  //   console.log('lalala')
-  //   console.log(req.user.name)
-  //   const user=req.user
-
-    
-    
-  //   res.render('dashboard',{user});
-
-  // });
-  
   
 
 
@@ -89,13 +74,13 @@ app.get('/login', (req, res) => {
           Authorization: `Bearer ${req.token}`,
         }
       });
-      //console.log(response)
+
       if (response.status!==200) {
         throw new Error('Failed to fetch folders');
       }
   
       const folders = response.data.folders;
-      //console.log(folders)
+   
       const filesResponse = await axios.get('http://localhost:3000/files/null', {
         headers: {
           Authorization: `Bearer ${req.token}`,
@@ -105,11 +90,11 @@ app.get('/login', (req, res) => {
         throw new Error('Failed to fetch files');
       }
       const files = filesResponse.data.files;
-      //console.log(files)
+
   
       res.render('dashboard', { user: req.user, folders, files });
     } catch (error) {
-      //console.error('Error:', error);
+      
       res.status(500).json({ error: 'An error occurred' });
     }
 
@@ -142,7 +127,7 @@ app.get('/login', (req, res) => {
         throw new Error('Failed to fetch files');
       }
       const files = filesResponse.data.files;
-      //console.log(files)
+
   
       res.render('dashboard', { user: req.user, folders, files });
     } catch (error) {
@@ -154,7 +139,7 @@ app.get('/login', (req, res) => {
   app.get('/users/shared', auth , async (req , res )=>{
 
     try{
-      console.log('shared route me')
+  
       const response = await axios.get(`http://localhost:3000/shared` , {
         headers : {
           'Authorization' : `Bearer ${req.token}` 
@@ -169,7 +154,7 @@ app.get('/login', (req, res) => {
       const files = response.data.sharedFiles
       
       res.render('sharedPage' , {folders,files});
-      //res.render('sharedPage');
+   
   
 
 
