@@ -1,6 +1,6 @@
 
-const mongoose=require('mongoose') //iske lie npm i mongoose karna hhh
-const validator=require('validator')// npm i 
+const mongoose=require('mongoose') 
+const validator=require('validator')
 const bcrypt =require('bcrypt')
 const jwt = require ('jsonwebtoken')
 //const Task= require('./tasks')
@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema({
  }
 
 
- /// removing unnesccary data showed to users
+ 
  userSchema.methods.toJSON= function () {
     const user =this
 
